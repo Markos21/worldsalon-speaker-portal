@@ -10,7 +10,7 @@ All colors MUST be HSL.
   :root {
     /* World Salon Professional Theme */
     --background: 210 20% 98%;
-    --foreground: 215 16% 91%;
+    --foreground: 215 20% 9%;
 
     --card: 0 0% 100%;
     --card-foreground: 215 25% 27%;
@@ -43,9 +43,21 @@ All colors MUST be HSL.
     --ring: 219 93% 36%;
 
     /* Professional Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(219 93% 36%), hsl(219 93% 42%));
-    --gradient-secondary: linear-gradient(135deg, hsl(215 16% 91%), hsl(210 40% 96%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 93% 58%), hsl(45 93% 65%));
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(219 93% 36%),
+      hsl(219 93% 42%)
+    );
+    --gradient-secondary: linear-gradient(
+      135deg,
+      hsl(215 16% 91%),
+      hsl(210 40% 96%)
+    );
+    --gradient-accent: linear-gradient(
+      135deg,
+      hsl(45 93% 58%),
+      hsl(45 93% 65%)
+    );
 
     /* Elegant Shadows */
     --shadow-elegant: 0 4px 20px -2px hsl(219 93% 36% / 0.1);
