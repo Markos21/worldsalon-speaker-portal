@@ -9,11 +9,13 @@ The Speaker Portal is designed to streamline speaker management for World Salon'
 ## ✨ Implemented Features
 
 ### 1. **Authentication System**
+
 - Professional login/signup flow with elegant UI
 - Form validation and user experience optimization
 - Secure authentication patterns ready for backend integration
 
 ### 2. **Speaker Profile Management**
+
 - Comprehensive profile creation and editing
 - Professional information management (bio, contact, expertise)
 - Social media integration
@@ -21,6 +23,7 @@ The Speaker Portal is designed to streamline speaker management for World Salon'
 - Profile picture management interface
 
 ### 3. **Event Creation & Management**
+
 - Full-featured event creation with rich form inputs
 - Event status tracking (draft, published, completed, cancelled)
 - RSVP management and attendee tracking
@@ -28,6 +31,7 @@ The Speaker Portal is designed to streamline speaker management for World Salon'
 - Zoom integration interface for virtual events
 
 ### 4. **Dashboard Overview**
+
 - Real-time statistics and metrics
 - Upcoming events display
 - Recent activity feed
@@ -37,6 +41,7 @@ The Speaker Portal is designed to streamline speaker management for World Salon'
 ## 🏗️ Architecture Design
 
 ### Frontend Architecture
+
 ```
 src/
 ├── components/           # Reusable UI components
@@ -55,6 +60,7 @@ src/
 ### Full-Stack Architecture (Proposed)
 
 #### Frontend (Current Implementation)
+
 - **React 18** with TypeScript for type safety
 - **Tailwind CSS** with custom design system
 - **shadcn/ui** for consistent component library
@@ -62,6 +68,7 @@ src/
 - **React Router** for client-side routing
 
 #### Backend (Recommended Implementation)
+
 ```
 Backend Services/
 ├── API Gateway (Express.js/Node.js)
@@ -83,6 +90,7 @@ Backend Services/
 ```
 
 #### Integration Points
+
 - **Multi-Platform Meeting APIs**: Zoom, Google Meet, Microsoft Teams integration
 - **SSO Providers**: Google OAuth, Microsoft Azure AD, SAML 2.0
 - **Notification Channels**: SendGrid/AWS SES, SMS, push notifications
@@ -92,6 +100,7 @@ Backend Services/
 ## 🔧 Technology Stack
 
 ### Current Implementation
+
 - **Frontend**: React, TypeScript, Tailwind CSS, shadcn/ui
 - **Build Tool**: Vite
 - **State Management**: React hooks + Context (expandable to Zustand/Redux)
@@ -99,6 +108,7 @@ Backend Services/
 - **UI Components**: Custom design system with semantic tokens
 
 ### Recommended Full-Stack
+
 - **Backend**: Node.js, Express.js, TypeScript
 - **Primary Database**: PostgreSQL with Prisma ORM + status tracking
 - **Chat Database**: MongoDB for scalable messaging
@@ -112,29 +122,34 @@ Backend Services/
 ### Infrastructure Components
 
 #### 1. **Frontend Deployment**
+
 - **AWS S3** + **CloudFront**: Static website hosting with global CDN
 - **Route 53**: DNS management and custom domain setup
 - **AWS Certificate Manager**: SSL/TLS certificates
 
 #### 2. **Backend Services**
+
 - **AWS ECS Fargate**: Containerized microservices deployment
 - **Application Load Balancer**: Traffic distribution and SSL termination
 - **Auto Scaling Groups**: Automatic scaling based on demand
 - **AWS API Gateway**: RESTful API management and throttling
 
 #### 3. **Database & Storage**
+
 - **Amazon RDS (PostgreSQL)**: Primary database with Multi-AZ deployment
 - **Amazon ElastiCache (Redis)**: Session storage and caching
 - **Amazon S3**: File storage for profile pictures and documents
 - **AWS Secrets Manager**: Secure storage for API keys and secrets
 
 #### 4. **Monitoring & Security**
+
 - **AWS CloudWatch**: Application monitoring and alerting
 - **AWS WAF**: Web application firewall
 - **AWS IAM**: Identity and access management
 - **VPC**: Network isolation and security groups
 
 ### Deployment Pipeline
+
 ```yaml
 CI/CD Pipeline:
 1. Code Push → GitHub
@@ -151,6 +166,7 @@ CI/CD Pipeline:
 ## 🔗 Multi-Platform Integration Strategy
 
 ### Meeting Platform Integrations
+
 ```typescript
 // Meeting Service - Multi-platform abstraction
 interface MeetingProvider {
@@ -166,7 +182,7 @@ class ZoomIntegration implements MeetingProvider {
 class GoogleMeetIntegration implements MeetingProvider {
   async createMeeting(eventData: EventInput): Promise<MeetingData> {
     const event = await googleCalendar.events.insert({
-      calendarId: 'primary',
+      calendarId: "primary",
       conferenceDataVersion: 1,
       requestBody: {
         summary: eventData.title,
@@ -175,10 +191,10 @@ class GoogleMeetIntegration implements MeetingProvider {
         conferenceData: {
           createRequest: {
             requestId: generateRequestId(),
-            conferenceSolutionKey: { type: 'hangoutsMeet' }
-          }
-        }
-      }
+            conferenceSolutionKey: { type: "hangoutsMeet" },
+          },
+        },
+      },
     });
     return extractMeetingData(event);
   }
@@ -190,13 +206,13 @@ class MicrosoftTeamsIntegration implements MeetingProvider {
 
 class MeetingService {
   private providers = new Map<string, MeetingProvider>();
-  
+
   constructor() {
-    this.providers.set('zoom', new ZoomIntegration());
-    this.providers.set('google-meet', new GoogleMeetIntegration());
-    this.providers.set('teams', new MicrosoftTeamsIntegration());
+    this.providers.set("zoom", new ZoomIntegration());
+    this.providers.set("google-meet", new GoogleMeetIntegration());
+    this.providers.set("teams", new MicrosoftTeamsIntegration());
   }
-  
+
   async createMeeting(platform: string, eventData: EventInput) {
     const provider = this.providers.get(platform);
     if (!provider) throw new Error(`Unsupported platform: ${platform}`);
@@ -206,6 +222,7 @@ class MeetingService {
 ```
 
 ### Platform Capabilities
+
 - **Zoom**: Full API integration, webinars, recording management
 - **Google Meet**: Calendar integration, Meet links, attendance tracking
 - **Microsoft Teams**: Enterprise features, organization integration
@@ -214,6 +231,7 @@ class MeetingService {
 ## 🔐 SSO Authentication Architecture
 
 ### Multi-Provider SSO Strategy
+
 ```typescript
 // Auth Service - SSO Provider abstraction
 interface SSOProvider {
@@ -230,7 +248,7 @@ class GoogleSSOProvider implements SSOProvider {
       email: userInfo.email,
       name: userInfo.name,
       picture: userInfo.picture,
-      provider: 'google'
+      provider: "google",
     };
   }
 }
@@ -244,14 +262,15 @@ class SAMLProvider implements SSOProvider {
 }
 
 // Auth middleware with provider routing
-app.use('/auth/:provider', (req, res, next) => {
+app.use("/auth/:provider", (req, res, next) => {
   const provider = ssoProviders.get(req.params.provider);
-  if (!provider) return res.status(400).json({ error: 'Invalid provider' });
+  if (!provider) return res.status(400).json({ error: "Invalid provider" });
   // Route to appropriate SSO handler
 });
 ```
 
 ### SSO Configuration
+
 - **Google OAuth 2.0**: Consumer and enterprise Google Workspace
 - **Microsoft Azure AD**: Enterprise single sign-on
 - **SAML 2.0**: Enterprise identity providers (Okta, Auth0, etc.)
@@ -260,6 +279,7 @@ app.use('/auth/:provider', (req, res, next) => {
 ## 📊 Database Schema & Status Management
 
 ### PostgreSQL Schema (Core Data)
+
 ```sql
 -- Users table with comprehensive status tracking
 CREATE TABLE users (
@@ -310,6 +330,7 @@ CREATE TYPE meeting_platform_enum AS ENUM ('zoom', 'google-meet', 'teams', 'cust
 ## 💬 Chat Microservice Architecture
 
 ### MongoDB Chat Service Design
+
 ```typescript
 // Chat microservice with MongoDB
 interface ChatMessage {
@@ -318,8 +339,8 @@ interface ChatMessage {
   senderId: string;
   senderName: string;
   message: string;
-  messageType: 'text' | 'image' | 'file' | 'system';
-  status: 'sent' | 'delivered' | 'read';
+  messageType: "text" | "image" | "file" | "system";
+  status: "sent" | "delivered" | "read";
   timestamp: Date;
   editedAt?: Date;
   metadata?: {
@@ -332,12 +353,12 @@ interface ChatMessage {
 
 interface Conversation {
   _id: ObjectId;
-  type: 'direct' | 'group' | 'event';
+  type: "direct" | "group" | "event";
   participants: Array<{
     userId: string;
     joinedAt: Date;
     lastSeen?: Date;
-    status: 'active' | 'left';
+    status: "active" | "left";
   }>;
   eventId?: string; // For event-specific conversations
   lastMessage?: {
@@ -345,7 +366,7 @@ interface Conversation {
     timestamp: Date;
     senderId: string;
   };
-  status: 'active' | 'archived' | 'deleted';
+  status: "active" | "archived" | "deleted";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -359,19 +380,22 @@ class ChatService {
   async sendMessage(data: SendMessageData): Promise<ChatMessage> {
     // Save to MongoDB
     const message = await this.saveMessage(data);
-    
+
     // Publish to Redis for real-time delivery
-    await this.redisClient.publish(`conversation:${data.conversationId}`, 
-      JSON.stringify(message));
-    
+    await this.redisClient.publish(
+      `conversation:${data.conversationId}`,
+      JSON.stringify(message)
+    );
+
     // Emit to Socket.io room
-    this.io.to(data.conversationId).emit('new_message', message);
-    
+    this.io.to(data.conversationId).emit("new_message", message);
+
     return message;
   }
-  
+
   async getConversationHistory(conversationId: string, page: number = 1) {
-    return this.mongodb.collection('messages')
+    return this.mongodb
+      .collection("messages")
       .find({ conversationId })
       .sort({ timestamp: -1 })
       .skip((page - 1) * 50)
@@ -382,6 +406,7 @@ class ChatService {
 ```
 
 ### Chat Service Features
+
 - **Real-time messaging**: Socket.io with Redis pub/sub for scaling
 - **Message persistence**: MongoDB for chat history and search
 - **File sharing**: Integration with S3 for media/document sharing
@@ -392,10 +417,12 @@ class ChatService {
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - Git
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -409,6 +436,7 @@ npm run dev
 ```
 
 ### Development Commands
+
 ```bash
 npm run dev          # Start development server
 npm run build        # Build for production
@@ -420,12 +448,14 @@ npm run type-check   # Run TypeScript checks
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary**: Professional blue (#1e40af) - Corporate trust and reliability
 - **Accent**: Warm amber (#f59e0b) - Energy and engagement
 - **Background**: Light gray tones for readability
 - **Status Colors**: Semantic colors for different states
 
 ### Key Design Principles
+
 - **Professional First**: Enterprise-grade visual design
 - **Accessibility**: WCAG 2.1 AA compliance ready
 - **Responsive**: Mobile-first responsive design
@@ -435,6 +465,7 @@ npm run type-check   # Run TypeScript checks
 ## 📋 Future Enhancements
 
 ### Phase 2 Features
+
 - **Advanced Analytics**: Speaker performance metrics and insights
 - **Calendar Integration**: Google Calendar, Outlook sync
 - **Advanced Messaging**: File sharing, group conversations
@@ -442,22 +473,10 @@ npm run type-check   # Run TypeScript checks
 - **AI Recommendations**: Speaker-event matching system
 
 ### Scalability Considerations
+
 - **Microservices Architecture**: Service decomposition for independent scaling
 - **Event-Driven Architecture**: Asynchronous processing for heavy operations
 - **CDN Strategy**: Global content delivery optimization
 - **Database Sharding**: Horizontal scaling for large datasets
 
-## 📞 Contact & Presentation
-
-This prototype demonstrates:
-- ✅ **Modern React Patterns**: Hooks, TypeScript, component composition
-- ✅ **Professional UI/UX**: Enterprise-grade design and user experience
-- ✅ **Scalable Architecture**: Cloud-native, microservices-ready structure
-- ✅ **Integration Readiness**: API-first design for third-party services
-- ✅ **Production Readiness**: Security, monitoring, and deployment considerations
-
-**Demo Ready**: The application includes realistic data and fully functional interfaces for presentation and discussion.
-
----
-
-*Built with React, TypeScript, and modern web technologies for World Salon's Speaker Portal assignment.*
+_Built with React, TypeScript, and modern web technologies for World Salon's Speaker Portal assignment._
